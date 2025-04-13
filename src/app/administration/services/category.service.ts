@@ -1,0 +1,51 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Category } from '../models/Category';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CategoryService {
+  private baseUrl = 'http://localhost:8081/secured/catrgory';
+
+  constructor(private http: HttpClient) { }
+
+  createCategory(category: Category, imageFile?: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('category', new Blob([JSON.stringify(category)], { type: 'application/json' }));
+
+    if (imageFile) {
+      formData.append('imageFile', imageFile);
+    }
+
+    return this.http.post(this.baseUrl, formData);
+  }
+
+  updateCategory(id: number, category: Category, imageFile?: File): Observable<Category> {
+    const formData = new FormData();
+    formData.append('category', new Blob([JSON.stringify(category)], { type: 'application/json' }));
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    return this.http.put<Category>(`${this.baseUrl}/${id}`, formData);
+  }
+
+  getAllCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(this.baseUrl);
+  }
+
+  deleteCategory(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  // New bulk delete method
+  deleteCategories(categoryIds: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/bulk`, {
+      body: categoryIds
+    });
+  }
+
+}
