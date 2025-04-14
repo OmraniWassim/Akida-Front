@@ -1,3 +1,206 @@
-<p-card>
-    <p>gestion-produit works!</p>
-</p-card>
+<div class="grid">
+    <div class="col-12">
+      <div class="card px-6 py-6">
+        <p-toast></p-toast>
+        
+        <p-toolbar styleClass="mb-4">
+          <ng-template pTemplate="left">
+            <div class="my-2">
+              <button pButton pRipple label="Add Product" icon="pi pi-plus" 
+                      class="p-button-success mr-2" (click)="openAddProduct()"></button>
+              <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" 
+                      [disabled]="!selectedProducts?.length" (click)="confirmDeleteSelected()"></button>
+            </div>
+          </ng-template>
+  
+          <ng-template pTemplate="right">
+            <button pButton pRipple label="Export" icon="pi pi-upload" 
+                    class="p-button-help" (click)="exportCSV()"></button>
+          </ng-template>
+        </p-toolbar>
+  
+        <p-table #dt [value]="products" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,25]"
+                 [(selection)]="selectedProducts" selectionMode="multiple" dataKey="id"
+                 [globalFilterFields]="['name','category.name']">
+          
+          <ng-template pTemplate="caption">
+            <div class="flex justify-content-between align-items-center">
+              <h5 class="m-0">Manage Products</h5>
+              <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" 
+                       placeholder="Search..." />
+              </span>
+            </div>
+          </ng-template>
+  
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="reference">Reference <p-sortIcon field="id"></p-sortIcon></th>
+              <th>Name </th>
+              <th>Image</th>
+              <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+              <th>Stock</th>
+              <th >Category</th>
+              <th>Reviews</th>
+              <th>Status </th>
+              <th style="width: 8rem">Actions</th>
+            </tr>
+          </ng-template>
+  
+          <ng-template pTemplate="body" let-product>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="product"></p-tableCheckbox>
+              </td>
+              <td style="width:14%; min-width: 10rem;">{{product.reference}}</td>
+              <td style="width:14%; min-width: 10rem;">{{product.name}}</td>
+              <td style="width:14%; min-width: 10rem;">
+                <img *ngIf="product.images != null" 
+                     [src]="imageMap[product?.images[0]?.thumbnailPath]"
+                     alt="Product Image" 
+                     width="100" 
+                     height="80"
+                     style="object-fit: cover; border-radius: 4px;" />
+              </td>
+              <td style="width:14%; min-width: 10rem;">{{product.price | currency}}</td>
+              <td style="width:14%; min-width: 10rem;">{{product.stockQuantity}}</td>
+              <td style="width:14%; min-width: 10rem;">{{product.category?.name}}</td>
+              <td style="width:14%; min-width: 10rem;">
+                    <p-rating [ngModel]="defaultRating" [readonly]="true" [cancel]="false"></p-rating>
+              </td>
+              <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Status</span>
+                <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
+            </td> 
+              <td class="actions-cell">
+                <div class="actions">
+                  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="initEditProduct(product)"></button>
+                  <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2" (click)="initDelteProduct(product)"></button>
+                </div>
+              </td>
+          </ng-template>
+  
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="8">No products found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Product Dialog -->
+  <p-dialog [(visible)]="productDialog" [style]="{width: '600px'}" [header]="dialogHeader" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+      <form [formGroup]="productForm" class="p-fluid">
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" pInputText formControlName="name" 
+                 [class]="{'ng-invalid ng-dirty': submitted && f['name'].errors}" />
+          <small *ngIf="submitted && f['name'].errors?.required" class="p-error">Name is required.</small>
+        </div>
+        
+        <div class="field">
+          <label for="reference">reference</label>
+            <input id="reference" pInputText formControlName="reference" 
+                     [class]="{'ng-invalid ng-dirty': submitted && f['reference'].errors}" />
+            <small *ngIf="submitted && f['reference'].errors?.required" class="p-error">Reference is required.</small>
+        </div>
+
+        <div class="field">
+          <label for="description">Description</label>
+          <textarea id="description" pInputTextarea formControlName="description" rows="3"></textarea>
+        </div>
+  
+        <div class="field">
+          <label for="price">Price</label>
+          <p-inputNumber id="price" formControlName="price" mode="currency" currency="TND"></p-inputNumber>
+          <small *ngIf="submitted && f['price'].errors?.required" class="p-error">Price is required.</small>
+        </div>
+  
+        <div class="field">
+          <label for="stock">Stock Quantity</label>
+          <p-inputNumber id="stock" formControlName="stockQuantity" [min]="0"></p-inputNumber>
+        </div>
+
+        <div class="field">
+            <label for="status">Inventory Status</label>
+            <p-dropdown formControlName="inventoryStatus"  inputId="inventoryStatus" optionValue="value" optionLabel="label" [options]="statuses" placeholder="Select">
+            </p-dropdown>
+        </div>
+  
+        <div class="field">
+          <label for="category">Category</label>
+          <p-dropdown id="category" formControlName="categoryId" [options]="categories" 
+                      optionLabel="name" optionValue="id" placeholder="Select a Category">
+          </p-dropdown>
+        </div>
+  
+        
+  
+        <div class="field">
+          <label for="images">Product Images</label>
+          <!-- <p-fileUpload
+                  [chooseLabel]="'choose_image' | translate"
+                  name="demo[]"
+                  url="https://www.primefaces.org/cdn/api/upload.php"
+                  accept=".jpg"
+                  invalidFileSizeMessageDetail="{{'should_not_exceed' | translate }}  4MB."
+                  multiple="false"
+                  (onUpload)="onBasicUpload($event)">
+                  <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length">
+                        <li *ngFor="let file of uploadedFiles">
+                            {{ file.name }} - {{ file.size }} bytes
+                        </li>
+                    </ul>
+                </ng-template>
+                </p-fileUpload> -->
+                <p-fileUpload
+                #fileUploaderRef
+                [chooseLabel]="'choose_image' | translate"
+                name="demo[]"
+                url="https://www.primefaces.org/cdn/api/upload.php"
+                accept=".jpg"
+                invalidFileSizeMessageDetail="{{ 'should_not_exceed' | translate }} 4MB."
+                multiple="false"
+                (onUpload)="onBasicUpload($event)"
+                #fileUploader>
+                
+                <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length" class="image-preview-list">
+                        <li *ngFor="let file of uploadedFiles; let i = index" class="image-preview-item">
+                            <img [src]="getImagePreview(file)" 
+                                alt="Product image"
+                                class="thumbnail-preview" />
+                            <div class="file-info">
+                            <span class="file-name">{{ file.originName ? file.originName:file.name }}</span>
+                            <span class="file-size" *ngIf="file.size">
+                                ({{ file.size | fileSize }})
+                            </span>
+                            </div>
+                            <button pButton 
+                                    icon="pi pi-times" 
+                                    class="p-button-rounded p-button-danger p-button-sm"
+                                    (click)="removeFile(i, $event)">
+                            </button>
+                        </li>
+                        </ul>
+                </ng-template>
+
+                </p-fileUpload>
+
+        </div>
+      </form>
+    </ng-template>
+  
+    <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+      <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+    </ng-template>
+  </p-dialog>
+  

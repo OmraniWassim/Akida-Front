@@ -19,6 +19,11 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
+import { TagModule } from 'primeng/tag';
+import { RatingModule } from 'primeng/rating';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, "./assets/i18n/", ".json")
@@ -44,7 +49,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     ToastModule,
     ToolbarModule,
     TranslateModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    InputNumberModule,
+    DropdownModule,
+    TagModule,
+    RatingModule
 
     
   ],
