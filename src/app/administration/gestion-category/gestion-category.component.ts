@@ -26,6 +26,7 @@ export class GestionCategoryComponent {
   imageMap: { [fileName: string]: string } = {};
   flag: string = 'create';
   categoryId: number = 0;
+  parentCategoryList: Category[];
 
 
 
@@ -40,7 +41,9 @@ export class GestionCategoryComponent {
   ) {
     this.categoryForm = this.formBuilder.group({
       name: ['', Validators.required],
-      description: [null]
+      description: [null],
+      sousCategory: ["no"],
+      parentId: [null],
     });
   }
 
@@ -90,6 +93,14 @@ export class GestionCategoryComponent {
       });
       return;
     }
+    if(this.categoryForm.get('sousCategory')?.value === 'yes' && !this.categoryForm.get('parentId')?.value) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Warning',
+        detail: 'Veuillez sélectionner une catégorie parente.',
+      });
+      return;
+    }
     if (this.flag === 'create') {
       this.addCategory();
     } else if (this.flag === 'edit') {
@@ -97,8 +108,9 @@ export class GestionCategoryComponent {
     }
   }
 
-  openAddCategory() {
+  initAddCategory() {
     this.dialogVisible = true;
+    this.parentCategoryList=this.categoryList;
     this.flag = 'create'
   }
 
@@ -112,6 +124,10 @@ export class GestionCategoryComponent {
       return;
     }
     this.category = this.categoryForm.getRawValue();
+    if(this.categoryForm.get('sousCategory')?.value === 'yes' && this.categoryForm.get('parentId')?.value) {
+      this.category.parent={} as Category;
+      this.category.parent.id = this.categoryForm.get('parentId')?.value;
+    }
     this.categoryService.createCategory(this.category, this.uploadedFiles[0]).subscribe((data: Category) => {
       this.categoryForm.reset();
       this.getCategories();
@@ -138,15 +154,28 @@ export class GestionCategoryComponent {
   initEditCategory(category: Category) {
     this.category = { ...category };
     this.categoryForm.patchValue(category);
-    this.dialogVisible = true;
     this.categoryId = category.id;
+    this.parentCategoryList=this.categoryList.filter(cat => cat.id !== this.categoryId);
+
+    if(this.category.parent) {
+      this.categoryForm.get('parentId')?.setValue(this.category.parent.id);
+      this.categoryForm.get('sousCategory')?.setValue('yes');
+    }else{
+      this.categoryForm.get('sousCategory')?.setValue('no');
+    }
+
     this.flag = 'edit'
+    this.dialogVisible = true;
   }
 
   editCategory() {
     this.submitted = true;
     this.category = this.categoryForm.getRawValue();
 
+    if(this.categoryForm.get('sousCategory')?.value === 'yes' && this.categoryForm.get('parentId')?.value) {
+      this.category.parent={} as Category;
+      this.category.parent.id = this.categoryForm.get('parentId')?.value;
+    }
 
     this.categoryService.updateCategory(this.categoryId, this.category, this.uploadedFiles[0])
       .subscribe({
@@ -263,7 +292,7 @@ export class GestionCategoryComponent {
     this.uploadedFiles = event.files;
     this.messageService.add({
       severity: 'info',
-      summary: 'File Uploaded',
+      summary: 'Fichier téléchargé',
     });
   }
 

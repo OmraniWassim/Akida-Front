@@ -7,4 +7,6 @@ export interface Category{
     description: string,
     products?:Product[],
     image?:Image
+    parent?:Category,
+    children?:Category[],
   }

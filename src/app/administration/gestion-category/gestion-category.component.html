@@ -6,7 +6,7 @@
         <p-toolbar styleClass="mb-4">
           <ng-template pTemplate="left">
             <div class="my-2">
-              <button pButton pRipple label="{{ 'add_category' | translate }}" icon="pi pi-plus" class="p-button-success mr-2" (click)="openAddCategory()"></button>
+              <button pButton pRipple label="{{ 'add_category' | translate }}" icon="pi pi-plus" class="p-button-success mr-2" (click)="initAddCategory()"></button>
               <button pButton pRipple label="{{ 'delete' | translate }}" icon="pi pi-trash" class="p-button-danger" [disabled]="!selectedCategories || !selectedCategories.length" (click)="initDeleteAllSelected()"></button>
             </div>
           </ng-template>
@@ -104,6 +104,41 @@
                   {{ 'description' | translate }} {{ 'is_required' | translate }}
                 </small>
               </div>
+              <div class="field">
+                <label class="font-bold" for="sousCategory">{{ 'sous_category' | translate }}</label>
+                <div class="flex align-items-center">
+                  <div class="mr-3">
+                    <p-radioButton 
+                      name="sousCategory" 
+                      value="yes" 
+                      formControlName="sousCategory" 
+                      [required]="categoryForm.get('sousCategory')?.value === 'yes'"
+                      inputId="yes">
+                    </p-radioButton>
+                    <label for="yes" class="ml-2">{{ 'yes' | translate }}</label>
+                  </div>
+                  <div>
+                    <p-radioButton 
+                      name="sousCategory" 
+                      value="no" 
+                      formControlName="sousCategory" 
+                      inputId="no">
+                    </p-radioButton>
+                    <label for="no" class="ml-2">{{ 'no' | translate }}</label>
+                  </div>
+                </div>
+                <small class="ng-dirty ng-invalid" *ngIf="submitted && categoryForm.get('sousCategory')?.hasError('required')">
+                  {{ 'sous_category' | translate }} {{ 'is_required' | translate }}
+                </small>
+              </div>
+
+                <div *ngIf="categoryForm.get('sousCategory')?.value === 'yes'" class="field">
+                <label  class="font-bold"  for="category">{{ 'parent_category' | translate }}</label>
+                <p-dropdown id="category" formControlName="parentId" [options]="parentCategoryList" appendTo="body"
+                      optionLabel="name" optionValue="id" placeholder="Select a category" [showClear]="true" [filter]="true"
+                      [filterPlaceholder]="'search' | translate" [showClear]="true" [filterBy]="'name'">
+                </p-dropdown>
+                </div>
   
               <div class="field">
                 <p-fileUpload
