@@ -1,24 +1,23 @@
-import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AppLayoutComponent } from "./layout/app.layout.component";
-import { NotfoundComponentComponent } from './notfound-component/notfound-component.component';
+import { RouterModule, Routes } from '@angular/router';
+import { AppLayoutComponent } from './layout/app.layout.component';
+
+const routes: Routes = [
+    {
+        path: 'auth',
+        loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    },
+    {
+        path: 'admin',
+        component: AppLayoutComponent,
+        loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
+    },
+    { path: '', redirectTo: 'auth', pathMatch: 'full' },
+    { path: '**', redirectTo: 'auth' }
+];
 
 @NgModule({
-    imports: [
-        RouterModule.forRoot([
-            {
-                path: '', component: AppLayoutComponent,
-                children: [
-                    { path: 'administration', loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule) },
-                ]
-            },
-            // { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
-            // { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
-             { path: 'notfound', component: NotfoundComponentComponent },
-            { path: '**', redirectTo: '/notfound' },
-        ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
-    ],
+    imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule { }

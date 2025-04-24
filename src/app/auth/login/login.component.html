@@ -1,0 +1,43 @@
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <img src="assets/images/logo.png" alt="Logo" class="logo" />
+            <h1>Bienvenue</h1>
+            <p>Connectez-vous pour accéder à votre compte</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+            <div class="field">
+                <span class="p-float-label">
+                    <input type="text" pInputText id="email" formControlName="email" />
+                    <label for="email">Email</label>
+                </span>
+                <small class="p-error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                    Email invalide
+                </small>
+            </div>
+
+            <div class="field">
+                <span class="p-float-label">
+                    <input type="password" pInputText id="password" formControlName="password" />
+                    <label for="password">Mot de passe</label>
+                </span>
+                <small class="p-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                    Mot de passe requis
+                </small>
+            </div>
+
+            <div class="field-checkbox">
+                <p-checkbox [binary]="true" formControlName="rememberMe" label="Se souvenir de moi"></p-checkbox>
+                <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+            </div>
+
+            <button pButton type="submit" label="Se connecter" [loading]="loading" class="p-button-primary"></button>
+        </form>
+
+        <div class="login-footer">
+            <p>Vous n'avez pas de compte ?</p>
+            <button pButton label="S'inscrire" class="p-button-text" (click)="goToSignup()"></button>
+        </div>
+    </div>
+</div> 

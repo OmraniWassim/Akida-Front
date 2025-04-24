@@ -1,3 +1,63 @@
-<p-card>
-    <p>dashboard works!</p>
-</p-card>
+<div class="dashboard-container">
+    <!-- Cartes de statistiques -->
+    <div class="grid">
+        <div class="col-12 md:col-6 lg:col-3">
+            <p-card>
+                <div class="stat-card">
+                    <i class="pi pi-shopping-cart text-2xl text-green-500"></i>
+                    <div class="stat-content">
+                        <h3>Ventes Totales</h3>
+                        <p>{{statistics.totalSales | currency:'EUR'}}</p>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3">
+            <p-card>
+                <div class="stat-card">
+                    <i class="pi pi-users text-2xl text-blue-500"></i>
+                    <div class="stat-content">
+                        <h3>Utilisateurs Totaux</h3>
+                        <p>{{statistics.totalUsers}}</p>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3">
+            <p-card>
+                <div class="stat-card">
+                    <i class="pi pi-chart-line text-2xl text-orange-500"></i>
+                    <div class="stat-content">
+                        <h3>Panier Moyen</h3>
+                        <p>{{statistics.averageOrder | currency:'EUR'}}</p>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-12 md:col-6 lg:col-3">
+            <p-card>
+                <div class="stat-card">
+                    <i class="pi pi-percentage text-2xl text-purple-500"></i>
+                    <div class="stat-content">
+                        <h3>Taux de Conversion</h3>
+                        <p>{{statistics.conversionRate}}%</p>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="grid mt-4">
+        <div class="col-12 lg:col-8">
+            <p-card header="Évolution des Ventes">
+                <p-chart type="line" [data]="salesData" [options]="salesOptions"></p-chart>
+            </p-card>
+        </div>
+        <div class="col-12 lg:col-4">
+            <p-card header="Répartition des Utilisateurs">
+                <p-chart type="doughnut" [data]="usersData" [options]="usersOptions"></p-chart>
+            </p-card>
+        </div>
+    </div>
+</div>
