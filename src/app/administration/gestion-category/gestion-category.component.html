@@ -1,3 +1,167 @@
-<p-card>
-    <p>gestion-category works!</p>
-</p-card>
+<div class="grid">
+    <div class="col-12">
+      <div class="card px-6 py-6">
+        <p-toast />
+        <p-confirmDialog />
+        <p-toolbar styleClass="mb-4">
+          <ng-template pTemplate="left">
+            <div class="my-2">
+              <button pButton pRipple label="{{ 'add_category' | translate }}" icon="pi pi-plus" class="p-button-success mr-2" (click)="initAddCategory()"></button>
+              <button pButton pRipple label="{{ 'delete' | translate }}" icon="pi pi-trash" class="p-button-danger" [disabled]="!selectedCategories || !selectedCategories.length" (click)="initDeleteAllSelected()"></button>
+            </div>
+          </ng-template>
+  
+          <ng-template pTemplate="right">
+            <button pButton pRipple label="{{ 'export' | translate }}" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+          </ng-template>
+        </p-toolbar>
+  
+        <p-table
+          #dt
+          [value]="categoryList"
+          [columns]="cols"
+          responsiveLayout="scroll"
+          [rows]="5"
+          [globalFilterFields]="['name']"
+          [paginator]="true"
+          [rowsPerPageOptions]="[5, 10, 20]"
+          [(selection)]="selectedCategories"
+          selectionMode="multiple"
+          [rowHover]="true"
+          dataKey="id"
+        >
+          <ng-template pTemplate="caption">
+            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+              <h5 class="m-0">{{ 'manage_categories' | translate }}</h5>
+              <span class="block mt-2 md:mt-0 p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" [placeholder]="'search' | translate" class="w-full sm:w-auto" />
+              </span>
+            </div>
+          </ng-template>
+  
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="id">ID <p-sortIcon field="code"></p-sortIcon></th>
+              <th pSortableColumn="name">{{ 'name' | translate }} <p-sortIcon field="code"></p-sortIcon></th>
+              <th>{{ 'image' | translate }}</th>
+              <th></th>
+            </tr>
+          </ng-template>
+  
+          <ng-template pTemplate="body" let-category>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="category"></p-tableCheckbox>
+              </td>
+              <td>{{ category.id }}</td>
+              <td>{{ category.name }}</td>
+              <td>
+                <img *ngIf="category.image != null" 
+                     [src]="imageMap[category.image?.thumbnailPath]"
+                     alt="Category Image" 
+                     width="100" 
+                     height="80"
+                     style="object-fit: cover; border-radius: 4px;" />
+              </td>
+              <td class="actions-cell">
+                <div class="actions">
+                  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="initEditCategory(category)"></button>
+                  <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2" (click)="initDelteCategory(category.id,category.name)"></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+  
+        <p-dialog [(visible)]="dialogVisible" [style]="{ width: '600px' }" [modal]="true" class="p-fluid" 
+        [header]="getDialogHeader()" (onHide)="resetDialog()">
+          <ng-template pTemplate="content">
+            <ng-form [formGroup]="categoryForm">
+              <img *ngIf="flag === 'edit' && category.image?.thumbnailPath" 
+                   [src]="imageMap[category.image?.thumbnailPath]" 
+                   alt="Category Image" 
+                   width="150" 
+                   class="mt-0 mx-auto mb-5 block shadow-2"/>
+
+
+
+              <div class="field">
+                <label class="font-bold	" for="name">{{ 'name' | translate }}</label>
+                <input type="text" pInputText id="name" formControlName="name" required autofocus />
+                <small class="ng-dirty ng-invalid" *ngIf="submitted && categoryForm.get('name')?.hasError('required')">
+                  {{ 'name' | translate }} {{ 'is_required' | translate }}
+                </small>
+              </div>
+  
+              <div class="field">
+                <label class="font-bold	" for="description">{{ 'description' | translate }}</label>
+                <textarea id="description" pInputTextarea formControlName="description" rows="5" cols="30"></textarea>
+                <small class="ng-dirty ng-invalid" *ngIf="submitted && categoryForm.get('description')?.hasError('required')">
+                  {{ 'description' | translate }} {{ 'is_required' | translate }}
+                </small>
+              </div>
+              <div class="field">
+                <label class="font-bold" for="sousCategory">{{ 'sous_category' | translate }}</label>
+                <div class="flex align-items-center">
+                  <div class="mr-3">
+                    <p-radioButton 
+                      name="sousCategory" 
+                      value="yes" 
+                      formControlName="sousCategory" 
+                      [required]="categoryForm.get('sousCategory')?.value === 'yes'"
+                      inputId="yes">
+                    </p-radioButton>
+                    <label for="yes" class="ml-2">{{ 'yes' | translate }}</label>
+                  </div>
+                  <div>
+                    <p-radioButton 
+                      name="sousCategory" 
+                      value="no" 
+                      formControlName="sousCategory" 
+                      inputId="no">
+                    </p-radioButton>
+                    <label for="no" class="ml-2">{{ 'no' | translate }}</label>
+                  </div>
+                </div>
+                <small class="ng-dirty ng-invalid" *ngIf="submitted && categoryForm.get('sousCategory')?.hasError('required')">
+                  {{ 'sous_category' | translate }} {{ 'is_required' | translate }}
+                </small>
+              </div>
+
+                <div *ngIf="categoryForm.get('sousCategory')?.value === 'yes'" class="field">
+                <label  class="font-bold"  for="category">{{ 'parent_category' | translate }}</label>
+                <p-dropdown id="category" formControlName="parentId" [options]="parentCategoryList" appendTo="body"
+                      optionLabel="name" optionValue="id" placeholder="Select a category" [showClear]="true" [filter]="true"
+                      [filterPlaceholder]="'search' | translate" [showClear]="true" [filterBy]="'name'">
+                </p-dropdown>
+                </div>
+  
+              <div class="field">
+                <p-fileUpload
+                  [chooseLabel]="getUploadLabel()"
+                  mode="basic" 
+                  auto="true"           
+                  url="https://www.primefaces.org/cdn/api/upload.php"
+                  accept=".jpg"
+                  invalidFileSizeMessageDetail="{{'should_not_exceed' | translate }}  4MB."
+                  multiple="false"
+                  (onUpload)="onBasicUpload($event)"
+                    class="flex justify-content-center align-items-center">
+                </p-fileUpload>
+              </div>
+            </ng-form>
+          </ng-template>
+  
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="{{ 'cancel' | translate }}" icon="pi pi-times" class="p-button-text" (click)="hideCategoryDialog()"></button>
+            <button pButton pRipple label="{{ 'save' | translate }}" icon="pi pi-check" class="p-button-text" (click)="saveCategory()"></button>
+        </ng-template>
+        </p-dialog>
+      </div>
+    </div>
+  </div>
+  

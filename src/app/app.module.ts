@@ -1,54 +1,51 @@
 import { NgModule } from '@angular/core';
+import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppLayoutModule } from './layout/app.layout.module';
+import { NotfoundComponentComponent } from './notfound-component/notfound-component.component';
+import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { LoadingInterceptor } from './interceptor/loading.interceptor';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { BlockUIModule } from 'primeng/blockui';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { AppLayoutModule } from './layout/app.layout.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-// PrimeNG Modules
-import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { RippleModule } from 'primeng/ripple';
-import { StyleClassModule } from 'primeng/styleclass';
-import { MenuModule } from 'primeng/menu';
-import { AvatarModule } from 'primeng/avatar';
-import { AvatarGroupModule } from 'primeng/avatargroup';
-import { BadgeModule } from 'primeng/badge';
-import { SplitButtonModule } from 'primeng/splitbutton';
-import { SidebarModule } from 'primeng/sidebar';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { TooltipModule } from 'primeng/tooltip';
 
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, "./assets/i18n/", ".json")
+  }
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        NotfoundComponentComponent,
+        SpinnerComponent
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
         AppLayoutModule,
-        FormsModule,
-        ReactiveFormsModule,
-        // PrimeNG Modules
-        ToastModule,
-        ButtonModule,
-        RippleModule,
-        StyleClassModule,
-        MenuModule,
-        AvatarModule,
-        AvatarGroupModule,
-        BadgeModule,
-        SplitButtonModule,
-        SidebarModule,
-        PanelMenuModule,
-        BreadcrumbModule,
-        TooltipModule
+        CommonModule,
+        BlockUIModule,
+        TranslateModule.forRoot({
+            loader: {
+      
+              provide: TranslateLoader,
+              useFactory: HttpLoaderFactory,
+              deps: [HttpClient],
+      
+            }
+          }),
     ],
-    providers: [MessageService],
+    providers: [
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+        TranslateService,MessageService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

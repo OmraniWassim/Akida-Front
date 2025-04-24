@@ -1,0 +1,17 @@
+{
+    "name": "Name",
+    "description": "Description",
+    "is_required": "is required.",
+    "choose_image": "Choose an image for the catalog",
+    "should_not_exceed": "It shouldn't exceed",
+    "category_details": "Category Details",
+    "cancel": "Cancel",
+    "save": "Save",
+    "add_category": "Add Category",
+    "delete": "Delete",
+    "export": "Export",
+    "manage_categories": "Manage categories",
+    "search": "Search...",
+    "Choose":"choisir"
+  }
+  

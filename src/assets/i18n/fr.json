@@ -1,0 +1,23 @@
+{
+    "name": "Nom",
+    "description": "Description",
+    "is_required": "est requis.",
+    "choose_image": "Choisir une image",
+    "new_image": "Nouvelle image",
+    "should_not_exceed": "Ne doit pas dépasser",
+    "category_details": "Détails de la catégorie",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "add_category": "Ajouter catégorie",
+    "delete": "Supprimer",
+    "export": "Exporter",
+    "manage_categories": "Gérer les catégories",
+    "search": "Rechercher...",
+    "Max_size_reached": "Taille  maximale atteinte",
+    "edit_image": "Modifier l'image",
+    "sous_category": "Sous-catégorie",
+    "yes": "Oui",
+    "no": "Non",
+    "parent_category": "Catégorie parente"
+  }
+  

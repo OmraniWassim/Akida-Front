@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GestionProduitComponent } from './gestion-produit/gestion-produit.component';
@@ -9,57 +8,61 @@ import { AdministrationsRoutingModule } from './administration-routing.module';
 
 // PrimeNG Modules
 import { CardModule } from 'primeng/card';
-import { ChartModule } from 'primeng/chart';
-import { TableModule } from 'primeng/table';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ToastModule } from 'primeng/toast';
-import { FileUploadModule } from 'primeng/fileupload';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { CalendarModule } from 'primeng/calendar';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { ContextMenuModule } from 'primeng/contextmenu';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { SliderModule } from 'primeng/slider';
-import { RatingModule } from 'primeng/rating';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast'
 import { ToolbarModule } from 'primeng/toolbar';
-import { MessageService } from 'primeng/api';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
+import { RatingModule } from 'primeng/rating';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { GestionDiscountComponent } from './gestion-discount/gestion-discount.component';
 
+
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, "./assets/i18n/", ".json")
+  }
 @NgModule({
-    declarations: [
-        DashboardComponent,
-        GestionProduitComponent,
-        GestionCategoryComponent
-    ],
-    imports: [
-        CommonModule,
-        RouterModule,
-        FormsModule,
-        ReactiveFormsModule,
-        AdministrationsRoutingModule,
-        // PrimeNG Modules
-        CardModule,
-        ChartModule,
-        TableModule,
-        InputTextModule,
-        DialogModule,
-        DropdownModule,
-        InputNumberModule,
-        ToastModule,
-        FileUploadModule,
-        InputTextareaModule,
-        CalendarModule,
-        MultiSelectModule,
-        ContextMenuModule,
-        ProgressBarModule,
-        SliderModule,
-        RatingModule,
-        ToolbarModule,
-        TagModule
-    ],
-    providers: [MessageService]
+  declarations: [
+    DashboardComponent,
+    GestionCategoryComponent,
+    GestionProduitComponent,
+    GestionDiscountComponent,
+  ],
+  imports: [
+    CommonModule,
+    AdministrationsRoutingModule,
+    CardModule,
+    DialogModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    InputTextareaModule,
+    FileUploadModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ToastModule,
+    ToolbarModule,
+    TranslateModule,
+    ConfirmDialogModule,
+    InputNumberModule,
+    DropdownModule,
+    TagModule,
+    RatingModule,
+    RadioButtonModule
+
+    
+  ],
+  providers: [MessageService,TranslatePipe,ConfirmationService],
 })
 export class AdministrationModule { }
