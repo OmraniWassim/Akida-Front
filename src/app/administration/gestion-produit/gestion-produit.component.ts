@@ -35,7 +35,7 @@ export class GestionProduitComponent implements OnInit {
   defaultRating: number = 5;
   imageMap: { [fileName: string]: string } = {};
   productId: number=0;
-  imagesToDelete: any[]= [];
+  deletedImageIds: number[] = []
 
 
 
@@ -95,7 +95,7 @@ export class GestionProduitComponent implements OnInit {
     this.productService.getAllProducts().subscribe((data: Product[]) => {
       if (data) {
          data.forEach(prod => {
-          if (prod.images && prod.images[0].thumbnailPath) {
+          if (prod.images.length > 0 && prod.images[0].thumbnailPath) {
             this.loadImage(prod.images[0].thumbnailPath);
           };
         });
@@ -118,11 +118,12 @@ export class GestionProduitComponent implements OnInit {
     }
     if (this.flag === 'create') {
       this.addProduct();
+    }else if (this.flag === 'edit') {
+      this.editProduct();
     }
-    // else if (this.flag === 'edit') {
-    //   this.editProduct();
-    // }
-    // }
+    this.submitted = false;
+    this.uploadedFiles = [];
+    
   }
 
   addProduct(): void {
@@ -151,7 +152,7 @@ export class GestionProduitComponent implements OnInit {
   initEditProduct(product : Product) {
     this.product = product;
     this.productForm.patchValue(product);
-    this.productForm.get('categoryId')?.setValue(product.category.id);
+    this.productForm.get('categoryId')?.setValue(product?.category?.id);
     this.productId = product.id;
     this.productDialog = true;
     if (product.images && product.images.length > 0) {
@@ -160,34 +161,50 @@ export class GestionProduitComponent implements OnInit {
           name: image.thumbnailPath,
           objectURL: this.imageMap[image.thumbnailPath] || this.loadImage(image.thumbnailPath),
           originName: image.fileName,
+          id: image.id,
         };
       });
     }
     this.flag = 'edit';
   }
+
+  editProduct(): void {
+    this.product = this.productForm.getRawValue();
+    this.product.category = {} as Category
+    this.product.category.id = this.productForm.get('categoryId')?.value;
+    let uploadedFilesToSend= this.uploadedFiles.filter((file) => file instanceof File)
+    this.productService.updateProduct(this.productId, this.product, uploadedFilesToSend,this.deletedImageIds).subscribe((data: Product) => {
+      this.productForm.reset();
+      this.getProducts();
+      this.productDialog = false;
+      this.showSuccess('Produit modifié avec succès');
+    },
+      (error) => {
+        this.showError('Erreur lors de la modification du produit');
+      });
+  }
+
   getImagePreview(file: any): string {
     if (file.objectURL) return file.objectURL;
     if(file.name) return this.loadImage(file.name);
     return 'assets/images/default-product.png';
   }
+
   removeFile(index: number, event?: Event) {
     if (event) event.stopPropagation();
     
     const file = this.uploadedFiles[index];
     
-    // If it's an existing image, mark for deletion
-    if (file.imageId && !file.file) {
-      this.imagesToDelete.push(file.imageId);
+    if (file.id && !file.file) {
+      this.deletedImageIds.push(file.id);
     }
     
-    // Clean up object URL if it exists
     if (file.objectURL && file.file) {
       URL.revokeObjectURL(file.objectURL);
     }
     
     this.uploadedFiles.splice(index, 1);
     
-    // If using FileUpload component
     if (this.fileUploader) {
       this.fileUploader.clear();
     }
@@ -239,6 +256,11 @@ export class GestionProduitComponent implements OnInit {
       detail: message
     });
   }
+
+  get f() {
+    return this.productForm.controls;
+  }
+  
 
   showError(message: string) {
     this.messageService.add({

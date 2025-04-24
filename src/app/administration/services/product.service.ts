@@ -29,20 +29,23 @@ export class ProductService {
     return this.http.post(this.baseUrl, formData);
   }
 
-  updateProduct(id: number, product: Product, imageFiles?: File[]): Observable<Product> {
+  updateProduct(id: number, product: Product, imageFiles: File[] = [], deletedImageIds: number[] = []): Observable<Product> {
     const formData = new FormData();
-    formData.append('product', new Blob([JSON.stringify(product)], { 
-      type: 'application/json' 
-    }));
-
-    if (imageFiles && imageFiles.length > 0) {
-      imageFiles.forEach((file, index) => {
-        formData.append('images', file, file.name);
-      });
-    }
-
+  
+    formData.append('product', new Blob([JSON.stringify(product)], { type: 'application/json' }));
+  
+    imageFiles.forEach(file => {
+      if (file instanceof File) {
+        formData.append('images', file);
+      }
+    });
+  
+    formData.append('deletedImageIds', new Blob([JSON.stringify(deletedImageIds)], { type: 'application/json' }));
+  
     return this.http.put<Product>(`${this.baseUrl}/${id}`, formData);
   }
+  
+  
 
   getProduct(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.baseUrl}/${id}`);
