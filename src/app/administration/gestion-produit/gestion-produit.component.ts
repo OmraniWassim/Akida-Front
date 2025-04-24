@@ -234,9 +234,6 @@ export class GestionProduitComponent implements OnInit {
     return this.imageMap[fileName];
   }
 
-
-
-
   hideDialog() {
     this.productDialog = false;
     this.submitted = false;

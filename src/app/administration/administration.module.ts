@@ -24,6 +24,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { GestionDiscountComponent } from './gestion-discount/gestion-discount.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -33,7 +34,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     DashboardComponent,
     GestionCategoryComponent,
-    GestionProduitComponent
+    GestionProduitComponent,
+    GestionDiscountComponent,
   ],
   imports: [
     CommonModule,
