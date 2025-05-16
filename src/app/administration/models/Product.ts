@@ -1,4 +1,5 @@
 import { Category } from "./Category";
+import { Discount } from "./Discount";
 import { Image } from "./image";
 import { ProductAttribute } from "./ProductAttribute";
 
@@ -12,4 +13,5 @@ import { ProductAttribute } from "./ProductAttribute";
     category?: Category;
     attributes?: ProductAttribute[];
     images: Image[];
+    discount?: Discount;
   }

@@ -27,6 +27,7 @@ import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { GestionDiscountComponent } from './gestion-discount/gestion-discount.component';
+import { ChartModule } from 'primeng/chart';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -59,8 +60,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DropdownModule,
     TagModule,
     RatingModule,
-    RadioButtonModule
-
+    RadioButtonModule,
+    ChartModule
     
   ],
   providers: [MessageService,TranslatePipe,ConfirmationService],
