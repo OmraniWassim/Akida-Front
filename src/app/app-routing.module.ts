@@ -14,7 +14,7 @@ import { NotfoundComponentComponent } from './notfound-component/notfound-compon
             },
             { path: 'ecommerce', loadChildren: () => import('./ecommerce/ecommerce.module').then(m => m.EcommerceModule) },
              { path: 'notfound', component: NotfoundComponentComponent },
-            { path: '**', redirectTo: '/notfound' },
+            //{ path: '**', redirectTo: '/notfound' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
     ],
     exports: [RouterModule]

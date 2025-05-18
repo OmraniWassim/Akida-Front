@@ -1,3 +1,4 @@
+import { AppUser } from "./AppUser";
 import { Category } from "./Category";
 import { Discount } from "./Discount";
 import { Image } from "./image";
@@ -14,4 +15,21 @@ import { ProductAttribute } from "./ProductAttribute";
     attributes?: ProductAttribute[];
     images: Image[];
     discount?: Discount;
+    favorites?: Favorite[];
+    ratings?: Rating[];
+  }
+
+  interface Favorite {
+    id?: number;
+    appUser: AppUser;
+    productId: number;
+  }
+
+  interface Rating {
+    id?: number;
+    ratingValue: number;
+    comment?: string;
+    ratingDate: Date; 
+    appUser: AppUser;
+    productId: number;
   }

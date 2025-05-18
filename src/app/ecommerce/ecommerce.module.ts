@@ -18,11 +18,20 @@ import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
 import { ChipModule } from 'primeng/chip';
+import { MegaMenuModule } from 'primeng/megamenu';
+import { DataViewModule } from 'primeng/dataview';
+import { ProductsListComponent } from './products-list/products-list.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { PreviewProductComponent } from './preview-product/preview-product.component';
+import { GalleriaModule } from 'primeng/galleria';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 
 @NgModule({
   declarations: [
-    ShopComponent
+    ShopComponent,
+    ProductsListComponent,
+    PreviewProductComponent
   ],
   imports: [
       CommonModule,
@@ -43,6 +52,12 @@ import { ChipModule } from 'primeng/chip';
       TagModule,
       RatingModule,
       ChipModule,
+      MegaMenuModule,
+      DataViewModule,
+      DropdownModule,
+      GalleriaModule,
+      InputNumberModule,
+      
       
       
     ],

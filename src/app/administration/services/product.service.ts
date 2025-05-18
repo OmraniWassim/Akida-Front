@@ -7,6 +7,9 @@ import { Product } from '../models/Product';
   providedIn: 'root'
 })
 export class ProductService {
+  getProductsByIdCategory(categoryId: number) {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl = 'http://localhost:8081/secured/product';
 
   constructor(private http: HttpClient) { }
@@ -61,5 +64,13 @@ export class ProductService {
 
   deleteProducts(ids: number[]): Observable<any> {
     return this.http.delete(`${this.baseUrl}/bulk`, { body: ids });
+  }
+
+  getAllProductsByCategoryId(categoryId: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}/category/${categoryId}`);
+  }
+
+  getProductById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/${id}`);
   }
 }

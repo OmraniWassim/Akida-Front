@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
 import { Category } from 'src/app/administration/models/Category';
+import { CategoryHierarchy } from 'src/app/administration/models/CategoryHierarchy';
 import { Product } from 'src/app/administration/models/Product';
 import { CategoryService } from 'src/app/administration/services/category.service';
 import { ImageService } from 'src/app/administration/services/image.service';
@@ -17,19 +19,65 @@ export class ShopComponent {
 
   imageMap: { [fileName: string]: string } = {};
   products: Product[] = [];
-  categoryList: Category[] = [];
+  categoryHierarchy: any[] = [];
+  megaMenuItems: MegaMenuItem[] = [];
+  responsiveOptions: { breakpoint: string; numVisible: number; numScroll: number; }[];
+  displayProductDetailDialog = false;
+  productId: number;
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
     private messageService: MessageService,
     private imageService: ImageService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    this.responsiveOptions = [
+      {
+        breakpoint: '1400px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '1199px',
+        numVisible: 3,
+        numScroll: 1
+      },
+      {
+        breakpoint: '767px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '575px',
+        numVisible: 1,
+        numScroll: 1
+      }]
+
+
+
     this.getProducts();
-    this.getCategories();
+    this.loadCategoryHierarchy();
   }
+
+  getSeverity(status: string) {
+    switch (status) {
+      case 'INSTOCK':
+        return 'success';
+      case 'LOWSTOCK':
+        return 'warn';
+      case 'OUTOFSTOCK':
+        return 'danger';
+      default:
+        return 'info';
+    }
+  }
+
+
+
 
   getProducts() {
     this.productService.getAllProducts().subscribe((data: Product[]) => {
@@ -43,25 +91,6 @@ export class ShopComponent {
       }
     }, (error) => {
       this.showError('Erreur lors de la récupération des produits');
-    });
-  }
-
-  getCategories() {
-    this.categoryService.getAllCategories().subscribe((data: Category[]) => {
-      if (data) {
-        data.forEach(cat => {
-          if (cat.image && cat.image.thumbnailPath) {
-            this.loadImage(cat.image.thumbnailPath);
-          };
-        });
-        this.categoryList = data;
-      }
-    }, (error) => {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Erreur lors de la récupération des catégories',
-      });
     });
   }
 
@@ -81,14 +110,6 @@ export class ShopComponent {
     console.log('Added to cart:', product);
   }
 
-  showError(message: string) {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: message
-    });
-  }
-
   calculateDiscountedPrice(product: Product): number {
     if (!product.discount) return product.price;
     return product.price * (1 - product.discount.percentage / 100);
@@ -103,20 +124,82 @@ export class ShopComponent {
     // Implement quick view modal logic
   }
 
-  navigateToCategory(categoryId: number) {
-    // Implement your navigation logic
+  loadCategoryHierarchy() {
+    this.categoryService.getCategoryHierarchy().subscribe(
+      (data: any[]) => {
+        this.categoryHierarchy = data;
+        this.megaMenuItems = this.buildMegaMenuItems(data);
+        
+        // Preload images
+        data.forEach(category => {
+          if (category.imagePath) {
+            this.loadImage(category.imagePath);
+          }
+        });
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load categories'
+        });
+      }
+    );
   }
 
-  // In your component class
-  prevCategory() {
-    // Logic to manually scroll carousel up
-    const carousel = document.querySelector('.vertical-category-carousel') as any;
-    if (carousel) carousel.getCarousel().prev();
+  private buildMegaMenuItems(categories: any[]): MegaMenuItem[] {
+    return categories.map(category => ({
+      label: category.name,
+      icon: this.getCategoryIcon(category),
+      items: [
+        [
+          {
+            label: category.name,
+            items: category.children?.length 
+              ? this.buildSubcategoryItems(category.children)
+              : [{ label: 'All Products', command: () => this.navigateToProductList(category.id) }]
+          }
+        ]
+      ]
+    }));
   }
 
-  nextCategory() {
-    // Logic to manually scroll carousel down
-    const carousel = document.querySelector('.vertical-category-carousel') as any;
-    if (carousel) carousel.getCarousel().next();
+  private buildSubcategoryItems(subcategories: any[]): any[] {
+    return subcategories.map(subCat => ({
+      label: subCat.name,
+      icon: this.getCategoryIcon(subCat),
+      command: () => this.navigateToProductList(subCat.id)
+    }));
+  }
+
+  getCategoryIcon(category: Category): string {
+    if (category.image && category.image.thumbnailPath) {
+      return this.loadImage(category.image.thumbnailPath);
+    }
+    return 'pi pi-tag'; // Default icon if no image is available
+  }
+
+  navigateToProductList(categoryId: number) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        categoryId: categoryId,
+        flagAllProducts: categoryId == null? true : false
+      },
+      relativeTo: this.route
+    };
+    this.router.navigate(['/ecommerce/product-list'], navigationExtras);
+  }
+
+  viewProduct(productId: number) {
+    this.productId = productId;
+    this.displayProductDetailDialog = true;
+  }
+
+  showError(message: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message
+    });
   }
 }

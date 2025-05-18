@@ -1,54 +1,77 @@
 <!-- home.component.html -->
-<div class="p-3">
-    <!-- Categories Row -->
-  <div class="categories-row mb-4">
-    <div *ngFor="let category of categoryList" class="category-chip">
-      <p-chip [label]="category.name" [image]="imageMap[category.image?.thumbnailPath]"></p-chip>
-    </div>
-  </div>
+<div class="p-card p-3">
+    <p-megaMenu [model]="megaMenuItems" [orientation]="'horizontal'"/>
+    <br>
 
   <!-- Promotions Carousel -->
-  <div class="mb-5">
-    <h3 class="section-title">Special Offers</h3>
-    <p-carousel [value]="products" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="5000">
-      <ng-template let-product pTemplate="item">
-        <div class="promo-product-card">
-          <div class="promo-badge" *ngIf="product.discount">
-            -{{ product.discount.percentage }}%
-          </div>
-          <img *ngIf="product.images?.length" 
-               [src]="imageMap[product.images[0]?.thumbnailPath]"
-               alt="{{ product.name }}" 
-               class="promo-product-image"/>
-          
-          <div class="promo-product-details">
-            <h4>{{ product.name }}</h4>
-            
-            <div class="price-container">
-              <span class="original-price">{{ product.price | currency:'TND':'symbol':'1.3-3' }}</span>
-              <span class="discounted-price">
-                {{ calculateDiscountedPrice(product) | currency:'TND':'symbol':'1.3-3' }}
-              </span>
-            </div>
-            
-            <div class="promo-dates" *ngIf="product.discount">
-              Offer ends: {{ product.discount.endDate | date:'shortDate' }}
-            </div>
-            
-            <button pButton label="Add to Cart" icon="pi pi-cart-plus" 
-                    class="p-button-sm p-button-rounded"></button>
-          </div>
+  <div class="promo-carousel-section mb-5">
+  <h3 class="section-title">Special Offers 🎁</h3>
+  
+  <p-carousel [value]="products" 
+              [numVisible]="3" 
+              [numScroll]="1" 
+              [circular]="true"
+
+              [autoplayInterval]="5000"
+              styleClass="promo-carousel">
+    <ng-template let-product pTemplate="item">
+      <div class="promo-card p-3">
+        <!-- Discount Badge -->
+        <div class="discount-badge" *ngIf="product.discount">
+          -{{ product.discount.percentage }}%
         </div>
-      </ng-template>
-    </p-carousel>
-  </div>
+        
+        <!-- Product Image -->
+        <div class="image-container mb-3">
+          <img *ngIf="product.images?.length"
+               [src]="imageMap[product.images[0]?.thumbnailPath]"
+               [alt]="product.name"
+               class="product-image"
+               (click)="viewProduct(product.id)"/>
+        </div>
+        
+        <!-- Product Details -->
+        <div class="product-details">
+          <h4 class="product-name mb-2">{{ product.name }}</h4>
+          
+          <!-- Price with strikethrough -->
+          <div class="price-display mb-2">
+            <span class="original-price line-through">
+              {{ product.price | currency:'TND':'symbol':'1.3-3' }}
+            </span>
+            <span class="discounted-price ml-2">
+              {{ calculateDiscountedPrice(product) | currency:'TND':'symbol':'1.3-3' }}
+            </span>
+          </div>
+          
+          <!-- Promotion Dates -->
+          <small class="promo-dates text-color-secondary block mb-3" *ngIf="product.discount">
+            <i class="pi pi-clock mr-1"></i>
+            Ends: {{ product.discount.endDate | date:'shortDate' }}
+          </small>
+          
+          <!-- Add to Cart -->
+          <button pButton 
+                  label="Add to Cart" 
+                  icon="pi pi-shopping-cart" 
+                  class="w-full"
+                  [disabled]="product.stockQuantity === 0"
+                  [class]="product.stockQuantity === 0 ? 'p-button-secondary' : 'p-button-primary'">
+            <span *ngIf="product.stockQuantity === 0">Out of Stock</span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div>
 
 
   <!-- Top Sellers Grid -->
 <div class="top-sellers-section my-5">
   <div class="flex justify-content-between align-items-center mb-3">
     <h3 class="section-title">Top Sellers 🔥</h3>
-    <a href="#" class="see-all-link">See All</a>
+    <a (click)="navigateToProductList(null)" class="see-all-link">See All</a>
+  
   </div>
 
   <!-- PrimeNG Grid with fixed card widths -->
@@ -66,10 +89,10 @@
           <img [src]="imageMap[product.images[0]?.thumbnailPath]" 
                [alt]="product.name" 
                class="product-image"
-               (click)="viewProduct(product.id)"/>
+               />
           <button pButton icon="pi pi-eye" 
                   class="p-button-rounded quick-view-btn"
-                  (click)="quickView(product)"></button>
+                  (click)="viewProduct(product.id)"></button>
         </div>
 
         <!-- Product Details -->
@@ -78,7 +101,7 @@
           
           <!-- Rating -->
           <div class="rating-container">
-            <p-rating [ngModel]="product.rating || 0" 
+            <p-rating [ngModel]="product.ratings.ratingValue?product.ratings.ratingValue:5" 
                      [readonly]="true" 
                      [cancel]="false"
                      [stars]="5"></p-rating>
@@ -108,50 +131,9 @@
     </div>
   </div>
 </div>
-
-  <!-- Category Showcase -->
-<div class="category-showcase-vertical my-5">
-  <div class="flex justify-content-between align-items-center mb-3">
-    <h3 class="section-title">Shop by Category</h3>
-    <div>
-      <button pButton icon="pi pi-chevron-up" 
-              class="p-button-text carousel-nav"
-              (click)="prevCategory()"></button>
-      <button pButton icon="pi pi-chevron-down" 
-              class="p-button-text carousel-nav ml-2"
-              (click)="nextCategory()"></button>
-    </div>
-  </div>
-
-  <div class="vertical-carousel-container">
-    <p-carousel [value]="categoryList" 
-                [numVisible]="3" 
-                [numScroll]="1"
-                orientation="vertical"
-                [verticalViewPortHeight]="'400px'"
-                [circular]="true"
-                styleClass="vertical-category-carousel">
-      <ng-template let-category pTemplate="item">
-        <div class="vertical-category-card">
-          <div class="category-image-wrapper">
-            <img [src]="imageMap[category.image?.thumbnailPath]" 
-                 [alt]="category.name"
-                 class="vertical-category-image"/>
-          </div>
-          <div class="category-info">
-            <h4>{{ category.name }}</h4>
-            <p-tag [value]="category.subCategoriesCount + ' subcategories'"
-                   severity="info"
-                   class="subcategory-tag"></p-tag>
-            <button pButton label="Explore" 
-                    icon="pi pi-arrow-right"
-                    iconPos="right"
-                    class="p-button-text p-button-plain explore-btn"></button>
-          </div>
-        </div>
-      </ng-template>
-    </p-carousel>
-  </div>
 </div>
 
-</div>
+
+<app-preview-product *ngIf="displayProductDetailDialog" [(display)]="displayProductDetailDialog"
+                [productId]="productId">
+</app-preview-product>
