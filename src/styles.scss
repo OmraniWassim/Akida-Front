@@ -7,3 +7,286 @@ $gutter: 1rem; //for primeflex grid system
 @import "../node_modules/primeng/resources/primeng.min.css";
 @import "../node_modules/primeflex/primeflex.scss";
 @import "../node_modules/primeicons/primeicons.css";
+
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+:root {
+  --header-height: 60px;
+  --footer-height: 300px;
+  --primary-color: #834D70;
+  --header-bg: #834D70;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--surface-ground);
+  background: #f5f8fd;
+  color: #222;
+}
+
+.layout-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  margin-top: var(--header-height);
+}
+
+section {
+  padding: 4rem 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
+}
+
+// Animations
+.fade-in {
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Styles des composants
+.featured-container {
+  padding: 2rem 0;
+  
+  .featured-item {
+    padding: 1rem;
+    
+    img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+  }
+}
+
+.shop-container {
+  .product-card {
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+    }
+    
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+  }
+}
+
+.about-container {
+  .about-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+}
+
+.contact-container {
+  max-width: 600px;
+  margin: 0 auto;
+  
+  .contact-form {
+    .p-field {
+      margin-bottom: 1.5rem;
+      
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+.footer {
+  background-color: var(--surface-ground);
+  padding: 3rem 2rem;
+  margin-top: auto;
+
+  h3 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    
+    li {
+      margin-bottom: 0.5rem;
+      
+      a {
+        color: var(--text-color-secondary);
+        text-decoration: none;
+        
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  .social-links {
+    a {
+      color: var(--text-color-secondary);
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .copyright {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--surface-border);
+  }
+}
+
+.main-content {
+  margin-top: var(--header-height);
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  padding: 2rem;
+}
+
+.header-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--surface-card);
+  /* Ancien box-shadow */
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+  /* Ajout de bordures solides avec la couleur principale */
+  border-top: 1px solid var(--primary-color);
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .cart-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Animation de transition de page
+.page-transition {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.p-button, .p-button.p-button-success, .p-button.p-button-lg {
+  background: var(--primary-color) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.p-button:hover, .p-button:focus {
+  background: #6a3c5a !important;
+  color: #fff !important;
+}
+
+.header-menu, .p-menubar {
+  background: #fff !important;
+  border: none !important;
+  border-bottom: 3px solid #834D70 !important;
+}
+
+.header-menu .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+  color: #222 !important;
+}
+
+// Boutons principaux (header, shop)
+.p-button.shop-btn, .p-button.header-btn, .p-button.search-btn {
+  background: #834D70 !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.p-button.shop-btn:hover, .p-button.header-btn:hover, .p-button.search-btn:hover {
+  background: #6a3c5a !important;
+  color: #fff !important;
+}
+
+// Bouton de validation (success) reste vert
+.p-button.p-button-success {
+  background: #22c55e !important;
+  border: none !important;
+  color: #fff !important;
+}
+
+// Hero title en blanc
+.hero-content h1 {
+  color: #fff !important;
+}

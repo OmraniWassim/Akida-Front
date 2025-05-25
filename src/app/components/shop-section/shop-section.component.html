@@ -1,0 +1,22 @@
+<div class="shop-container">
+  <h2>Notre Collection</h2>
+  <div class="p-grid">
+    <div class="p-col-12 p-md-6 p-lg-4" *ngFor="let product of products">
+      <div class="modern-product-card" (click)="selectProduct(product)" [class.selected]="selectedProduct === product">
+        <img [src]="product.image" [alt]="product.name" class="product-img">
+        <div class="product-content">
+          <h3>{{product.name}}</h3>
+          <p>{{product.description}}</p>
+          <div class="product-footer">
+            <p-button label="Ajouter au panier" icon="pi pi-shopping-cart"></p-button>
+            <span class="price">{{product.price | currency:'EUR'}}</span>
+          </div>
+          <div class="product-details" *ngIf="selectedProduct === product">
+            <hr>
+            <p>{{product.details}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -5,7 +5,7 @@ import { LoaderService } from '../interceptor/Loader.service';
   selector: 'app-spinner',
   standalone: false,
   templateUrl: './spinner.component.html',
-  styleUrl: './spinner.component.scss'
+  styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent {
 

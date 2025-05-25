@@ -13,7 +13,7 @@ import { FileUpload } from 'primeng/fileupload';
   selector: 'app-gestion-produit',
   standalone: false,
   templateUrl: './gestion-produit.component.html',
-  styleUrl: './gestion-produit.component.scss'
+  styleUrls: ['./gestion-produit.component.scss']
 })
 export class GestionProduitComponent implements OnInit {
   @ViewChild('dt') dt: Table;
