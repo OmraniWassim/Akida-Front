@@ -28,6 +28,8 @@ import { RatingModule } from 'primeng/rating';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { GestionDiscountComponent } from './gestion-discount/gestion-discount.component';
 import { ChartModule } from 'primeng/chart';
+import { MenuModule } from 'primeng/menu';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,6 +41,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     GestionCategoryComponent,
     GestionProduitComponent,
     GestionDiscountComponent,
+    AdminLayoutComponent
   ],
   imports: [
     CommonModule,
@@ -61,7 +64,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     TagModule,
     RatingModule,
     RadioButtonModule,
-    ChartModule
+    ChartModule,
+    MenuModule
     
   ],
   providers: [MessageService,TranslatePipe,ConfirmationService],
