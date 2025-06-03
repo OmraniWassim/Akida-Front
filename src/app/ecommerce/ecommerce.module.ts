@@ -25,13 +25,34 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PreviewProductComponent } from './preview-product/preview-product.component';
 import { GalleriaModule } from 'primeng/galleria';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { MenubarModule } from 'primeng/menubar';
+import { PanelModule } from 'primeng/panel';
+import { RippleModule } from 'primeng/ripple';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
+import { FeaturedImagesComponent } from './featured-images/featured-images.component';
+import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
+import { EcommerceLayoutComponent } from './layout/ecommerce-layout.component';
+import { HeroSectionComponent } from './hero-section/hero-section.component';
+
+
 
 
 @NgModule({
   declarations: [
     ShopComponent,
     ProductsListComponent,
-    PreviewProductComponent
+    PreviewProductComponent,
+      HeaderComponent,
+      FeaturedImagesComponent,
+      AboutUsComponent,
+      ContactUsComponent,
+      FooterComponent,
+      HomeComponent,
+      EcommerceLayoutComponent,
+      HeroSectionComponent
   ],
   imports: [
       CommonModule,
@@ -57,6 +78,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
       DropdownModule,
       GalleriaModule,
       InputNumberModule,
+      MenubarModule,
+      PanelModule,
+      RippleModule
+
       
       
       

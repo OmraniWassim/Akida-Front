@@ -17,8 +17,8 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
             { path: 'ecommerce',
               loadChildren: () => import('./ecommerce/ecommerce.module').then(m => m.EcommerceModule)
             },
-            { path: '', redirectTo: '/ecommerce/shp', pathMatch: 'full' },
-            { path: '**', redirectTo: '/ecommerce/shop' }
+            { path: '', redirectTo: '/ecommerce', pathMatch: 'full' },
+            { path: '**', redirectTo: '/ecommerce' }
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
     ],
     exports: [RouterModule]
