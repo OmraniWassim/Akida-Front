@@ -1,0 +1,43 @@
+<div class="contact-container">
+  <div class="contact-duo-wrapper">
+    <div class="contact-single-card">
+      <i class="pi pi-envelope contact-icon"></i>
+      <h2>Contactez-nous</h2>
+      <div class="contact-info-block">
+        <h3>Email</h3>
+        <p>contact&#64;sopal.tn</p>
+      </div>
+      <div class="contact-info-block">
+        <h3>Téléphone</h3>
+        <p>+216 71 123 456</p>
+      </div>
+      <div class="contact-info-block">
+        <h3>Réseaux Sociaux</h3>
+        <div class="social-links">
+          <a href="#" target="_blank"><i class="pi pi-facebook"></i></a>
+          <a href="#" target="_blank"><i class="pi pi-instagram"></i></a>
+          <a href="#" target="_blank"><i class="pi pi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="contact-single-card">
+      <i class="pi pi-send contact-icon"></i>
+      <h2>Envoyer un message</h2>
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form-block">
+        <div class="p-field">
+          <label for="name">Nom</label>
+          <input id="name" type="text" pInputText formControlName="name" class="p-inputtext-lg">
+        </div>
+        <div class="p-field">
+          <label for="email">Email</label>
+          <input id="email" type="email" pInputText formControlName="email" class="p-inputtext-lg">
+        </div>
+        <div class="p-field">
+          <label for="message">Message</label>
+          <textarea id="message" formControlName="message" rows="4" class="p-inputtext-lg message-textarea"></textarea>
+        </div>
+        <p-button type="submit" label="Envoyer" styleClass="p-button-lg p-button-success"></p-button>
+      </form>
+    </div>
+  </div>
+</div> 

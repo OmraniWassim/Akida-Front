@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { GestionProduitComponent } from './gestion-produit/gestion-produit.component';
 import { GestionCategoryComponent } from './gestion-category/gestion-category.component';
 import { AdministrationsRoutingModule } from './administration-routing.module';
+import { AdminLayoutComponent } from './layout/admin-layout.component';
 
 // PrimeNG Modules
 import { CardModule } from 'primeng/card';
@@ -15,11 +16,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast'
+import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';

@@ -30,6 +30,9 @@
                             "src/assets"
                         ],
                         "styles": [
+                            "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+                            "node_modules/primeng/resources/primeng.min.css",
+                            "node_modules/primeicons/primeicons.css",
                             "src/styles.scss"
                         ],
                         "scripts": []
@@ -65,10 +68,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "buildTarget": "akida:build:production"
+                            "browserTarget": "akida:build:production"
                         },
                         "development": {
-                            "buildTarget": "akida:build:development"
+                            "browserTarget": "akida:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -76,7 +79,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "buildTarget": "akida:build"
+                        "browserTarget": "akida:build"
                     }
                 },
                 "test": {

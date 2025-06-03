@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-gestion-category',
   standalone: false,
   templateUrl: './gestion-category.component.html',
-  styleUrl: './gestion-category.component.scss'
+  styleUrls: ['./gestion-category.component.scss']
 })
 export class GestionCategoryComponent {
   propertyDialog: boolean = false;

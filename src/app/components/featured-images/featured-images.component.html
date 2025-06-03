@@ -1,0 +1,11 @@
+<div class="featured-slider-container">
+  <p-carousel [value]="featuredProducts" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="4000" [responsiveOptions]="responsiveOptions">
+    <ng-template let-product pTemplate="item">
+      <div class="featured-card">
+        <img [src]="product.image" [alt]="product.name" class="featured-img">
+        <h3>{{product.name}}</h3>
+        <p>{{product.description}}</p>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div> 
