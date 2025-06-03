@@ -1,0 +1,15 @@
+<p-menubar [model]="items" [style]="{'border-radius': '0'}" class="header-menu">
+  <ng-template pTemplate="start">
+    <img src="assets/layout/images/logo-dark.svg" style="height: 40px;" class="mr-2" alt="Logo">
+  </ng-template>
+  
+  <ng-template pTemplate="end">
+    <div class="header-actions">
+      <p-button icon="pi pi-search" styleClass="p-button-text"></p-button>
+      <p-button icon="pi pi-shopping-cart" styleClass="p-button-text">
+        <span class="cart-badge">0</span>
+      </p-button>
+      <p-button icon="pi pi-user" styleClass="p-button-text" (click)="goToLogin()"></p-button>
+    </div>
+  </ng-template>
+</p-menubar> 
