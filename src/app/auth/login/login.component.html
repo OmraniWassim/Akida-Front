@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="login-container">
     <div class="login-card">
         <div class="login-header">
@@ -7,24 +8,26 @@
         </div>
 
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-            <div class="field">
-                <span class="p-float-label">
-                    <input type="text" pInputText id="email" formControlName="email" />
-                    <label for="email">Email</label>
-                </span>
-                <small class="p-error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                    Email invalide
-                </small>
-            </div>
+            <div class="flex justify-content-center flex-wrap">
+                <div class="field">
+                    <span class="p-float-label">
+                        <input type="text" pInputText id="email" formControlName="email" />
+                        <label for="email">Email</label>
+                    </span>
+                    <small class="p-error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                        Email invalide
+                    </small>
+                </div>
 
-            <div class="field">
-                <span class="p-float-label">
-                    <input type="password" pInputText id="password" formControlName="password" />
-                    <label for="password">Mot de passe</label>
-                </span>
-                <small class="p-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                    Mot de passe requis
-                </small>
+                <div class="field">
+                    <span class="p-float-label">
+                        <input type="password" pInputText id="password" formControlName="password" />
+                        <label for="password">Mot de passe</label>
+                    </span>
+                    <small class="p-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                        Mot de passe requis
+                    </small>
+                </div>
             </div>
 
             <div class="field-checkbox">

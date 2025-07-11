@@ -36,6 +36,9 @@ import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { EcommerceLayoutComponent } from './layout/ecommerce-layout.component';
 import { HeroSectionComponent } from './hero-section/hero-section.component';
+import { CartComponent } from './cart/cart.component';
+import { TableModule } from 'primeng/table';
+import { TruncatePipe } from '../shared/pipes/truncate.pipe';
 
 
 
@@ -52,7 +55,9 @@ import { HeroSectionComponent } from './hero-section/hero-section.component';
       FooterComponent,
       HomeComponent,
       EcommerceLayoutComponent,
-      HeroSectionComponent
+      HeroSectionComponent,
+      CartComponent,
+      TruncatePipe
   ],
   imports: [
       CommonModule,
@@ -80,7 +85,8 @@ import { HeroSectionComponent } from './hero-section/hero-section.component';
       InputNumberModule,
       MenubarModule,
       PanelModule,
-      RippleModule
+      RippleModule,
+      TableModule
 
       
       

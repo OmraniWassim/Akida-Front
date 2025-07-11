@@ -1,3 +1,4 @@
+<p-toast/>
 <div class="layout-topbar">
     <a class="layout-topbar-logo" routerLink="">
         <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
@@ -12,18 +13,268 @@
         <i class="pi pi-ellipsis-v"></i>
     </button>
 
-    <!-- <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        <!-- Notification Bell with Badge -->
+        <button class="p-link layout-topbar-button" (click)="toggleNotifications()">
+            <i class="pi pi-bell"></i>
+            <span class="badge bg-primary badge-number">{{ notifications.length }}</span>
+            <span>Notifications</span>
+        </button>
+
+        <p-badge *ngIf="unreadNotifications > 0" [value]="unreadNotifications" severity="danger"></p-badge>
+
+        
         <button class="p-link layout-topbar-button">
             <i class="pi pi-calendar"></i>
             <span>Calendar</span>
         </button>
-        <button class="p-link layout-topbar-button">
+        <button class="p-link layout-topbar-button" routerLink="/auth/login">
             <i class="pi pi-user"></i>
             <span>Profile</span>
         </button>
-        <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
+        <button class="p-link layout-topbar-button" routerLink="/auth/login">
             <i class="pi pi-cog"></i>
             <span>Settings</span>
         </button>
-    </div> -->
+    </div>
 </div>
+
+<!-- Notification Panel (add this right after the topbar div) -->
+<div *ngIf="showNotificationPanel" class="notification-panel">
+    <div class="notification-header">
+        <h3>Command Notifications</h3>
+        <button class="p-link" (click)="markAllAsRead()">Mark all as read</button>
+    </div>
+    <div class="notification-list">
+        <div *ngFor="let notification of notifications" 
+             class="notification-item" 
+             [class.unread]="!notification.read">
+            <div class="notification-content">
+                <h4>{{notification.title}}</h4>
+                <p>{{notification.message}}</p>
+                <small>{{notification.time | date:'short'}}</small>
+            </div>
+            <button class="p-link" (click)="markAsRead(notification)">
+                <i class="pi pi-check"></i>
+            </button>
+        </div>
+        <div *ngIf="notifications.length === 0" class="empty-notifications">
+            No new notifications
+        </div>
+    </div>
+</div>
+
+<!-- Add this to your component template (topbar.component.html or where appropriate) -->
+<p-dialog header="New Order Notification" 
+          [(visible)]="commandeDialog" 
+          [style]="{width: '70vw'}" 
+          [modal]="true" 
+          [draggable]="false" 
+          [resizable]="false">
+    
+    <!-- Order Header Info -->
+    <div class="order-header">
+        <h3>Order #{{commandeToDisplay?.id}}</h3>
+        <p class="order-date">
+            <i class="pi pi-calendar"></i> 
+            {{commandeToDisplay?.orderDate | date:'medium'}}
+        </p>
+    </div>
+
+    <!-- Customer Information -->
+    <div class="customer-section">
+        <h4>Customer Information</h4>
+        <div class="grid">
+            <div class="col-6">
+                <p><strong>Name:</strong> {{commandeToDisplay?.appUser?.firstName}} {{commandeToDisplay?.appUser?.lastName}}</p>
+                <p><strong>Phone:</strong> {{commandeToDisplay?.appUser?.telNumber}}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>Delivery Address:</strong></p>
+                <p>{{commandeToDisplay?.deliveryAddress}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="order-items">
+        <h4>Order Items</h4>
+        <p-table [value]="commandeToDisplay?.items" [responsive]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Product</th>
+                    <th>Reference</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>{{item.product?.name}}</td>
+                    <td>{{item.product?.reference}}</td>
+                    <td>{{item.unitPrice | currency:'TND':'symbol':'1.3-3'}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.unitPrice * item.quantity | currency:'TND':'symbol':'1.3-3'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>{{getSubtotal() | currency:'TND':'symbol':'1.3-3'}}</span>
+        </div>
+        <div class="summary-row">
+            <span>Delivery Fee:</span>
+            <span>{{deliveryFee | currency:'TND':'symbol':'1.3-3'}}</span>
+        </div>
+        <div class="summary-row total">
+            <span>Total Amount:</span>
+            <span>{{commandeToDisplay?.totalAmount | currency:'TND':'symbol':'1.3-3'}}</span>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button pButton 
+                label="Accept Order" 
+                icon="pi pi-check" 
+                class="p-button-success" 
+                (click)="acceptOrder()"></button>
+        <button pButton 
+                label="Reject Order" 
+                icon="pi pi-times" 
+                class="p-button-danger" 
+                (click)="rejectOrder()"></button>
+    </div>
+</p-dialog>
+
+<style>
+    .notification-panel {
+    position: absolute;
+    right: 1rem;
+    top: 4rem;
+    width: 350px;
+    max-height: 500px;
+    overflow-y: auto;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+    z-index: 1100;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.notification-list {
+    padding: 0.5rem;
+}
+
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--surface-border);
+    transition: background-color 0.2s;
+}
+
+.notification-item.unread {
+    background-color: var(--highlight-bg);
+}
+
+.notification-item:hover {
+    background-color: var(--surface-hover);
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+}
+
+.notification-content p {
+    margin: 0 0 0.25rem 0;
+    color: var(--text-color-secondary);
+}
+
+.notification-content small {
+    color: var(--text-color-secondary);
+    font-size: 0.75rem;
+}
+
+.empty-notifications {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-color-secondary);
+}
+
+
+
+
+
+
+
+
+
+/* Add to your component's CSS file */
+.order-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.order-date {
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+.customer-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+}
+
+.order-items {
+    margin-bottom: 1.5rem;
+}
+
+.order-summary {
+    margin-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.summary-row.total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+</style>

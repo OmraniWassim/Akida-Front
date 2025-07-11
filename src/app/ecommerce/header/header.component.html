@@ -6,8 +6,8 @@
   <ng-template pTemplate="end">
     <div class="header-actions">
       <p-button icon="pi pi-search" styleClass="p-button-text"></p-button>
-      <p-button icon="pi pi-shopping-cart" styleClass="p-button-text">
-        <span class="cart-badge">0</span>
+      <p-button (click)="goToCart()" icon="pi pi-shopping-cart" styleClass="p-button-text">
+        <span class="cart-badge">{{cartCount}}</span>
       </p-button>
       <p-button icon="pi pi-user" styleClass="p-button-text" (click)="goToLogin()"></p-button>
     </div>

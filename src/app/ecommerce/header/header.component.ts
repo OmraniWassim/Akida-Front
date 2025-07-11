@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
+import { CartService } from 'src/app/administration/services/cart.service';
 
 @Component({
   selector: 'app-header-ecommerce',
@@ -8,6 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
+  cartCount: number = 0;
+
   items: MenuItem[] = [
     {
       label: 'Accueil',
@@ -31,7 +34,13 @@ export class HeaderComponent {
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private cartService:CartService) {}
+
+  ngOnInit(): void {
+    this.cartService.getCartObservable().subscribe(items => {
+      this.cartCount = this.cartService.getCartCount();
+    });
+  }
 
   scrollToSection(sectionId: string): void {
     if (this.router.url === '/') {
@@ -43,5 +52,9 @@ export class HeaderComponent {
 
   goToLogin(): void {
     this.router.navigate(['/auth/login']);
+  }
+
+  goToCart(): void {
+    this.router.navigate(['/ecommerce/cart']);
   }
 } 

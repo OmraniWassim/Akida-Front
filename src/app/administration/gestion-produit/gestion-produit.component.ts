@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Category } from '../models/Category';
 import { Product } from '../models/Product';
@@ -46,6 +46,7 @@ export class GestionProduitComponent implements OnInit {
     private categoryService: CategoryService,
     private messageService: MessageService,
     private imageService: ImageService,
+    private confirmationService: ConfirmationService,
     private fb: FormBuilder
   ) { }
 
@@ -182,6 +183,42 @@ export class GestionProduitComponent implements OnInit {
       (error) => {
         this.showError('Erreur lors de la modification du produit');
       });
+  }
+
+  initDelteProduct(productId: number, productName: string) {
+    this.productId = productId;
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: `Êtes-vous sûr de vouloir supprimer le produit "${productName}" ?`,
+      header: 'Confirmation de suppression',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-text",
+      acceptIcon: "none",
+      rejectIcon: "none",
+      acceptLabel: 'Supprimer',
+      rejectLabel: 'Annuler',
+      accept: () => {
+        this.deleteProduct();
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'info', summary: 'Annulé', detail: 'Suppression annulée' });
+      }
+    });
+
+
+  }
+  deleteProduct() {
+    this.productService.deleteProduct(this.productId).subscribe(() => {
+      this.getProducts();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Produit supprimé avec succès'
+      });
+    }, (error) => {
+      this.showError('Erreur lors de la suppression du produit');
+    });
   }
 
   getImagePreview(file: any): string {
