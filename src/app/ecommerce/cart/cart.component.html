@@ -1,21 +1,21 @@
 <p-confirmDialog />
 <p-toast/>
 <div class="cart-container">
-  <!-- Header with cart summary -->
+  <!-- En-tête avec résumé du panier -->
   <div class="cart-header">
     <div class="flex align-items-center">
       <i class="pi pi-shopping-cart mr-3" style="font-size: 1.5rem"></i>
-      <h1>Your Shopping Cart</h1>
-      <span class="cart-count-badge">{{cartItems.length}} items</span>
+      <h1>Votre Panier</h1>
+      <span class="cart-count-badge">{{cartItems.length}} articles</span>
     </div>
-    <p-button label="Clear All" 
+    <p-button label="Tout supprimer" 
               icon="pi pi-trash" 
               styleClass="p-button-text p-button-danger"
               (click)="clearCart()"
               [disabled]="cartItems.length === 0"></p-button>
   </div>
 
-  <!-- Cart items with modern card design -->
+  <!-- Articles du panier avec design moderne -->
   <div class="cart-items">
     <div *ngFor="let item of cartItems" class="cart-item-card">
       <div class="item-image">
@@ -39,7 +39,7 @@
                 [ngClass]="{'in-stock': item.product.stockQuantity > 0, 
                            'low-stock': item.product.stockQuantity <= 5 && item.product.stockQuantity > 0,
                            'out-of-stock': item.product.stockQuantity <= 0}">
-            {{item.product.stockQuantity > 0 ? (item.product.stockQuantity + ' available') : 'Out of stock'}}
+            {{item.product.stockQuantity > 0 ? (item.product.stockQuantity + ' disponibles') : 'Rupture de stock'}}
           </span>
           
           <p-rating [ngModel]="item.product.ratings?.ratingValue || 5" 
@@ -70,28 +70,28 @@
       </div>
     </div>
 
-    <!-- Empty state -->
+    <!-- État vide -->
     <div *ngIf="cartItems.length === 0" class="empty-cart">
       <i class="pi pi-shopping-cart" style="font-size: 3rem"></i>
-      <h3>Your cart is empty</h3>
-      <p-button label="Continue Shopping" 
+      <h3>Votre panier est vide</h3>
+      <p-button label="Continuer vos achats" 
                 icon="pi pi-arrow-left"
                 (click)="goToShop()"></p-button>
     </div>
   </div>
 
-  <!-- Order summary -->
+  <!-- Résumé de la commande -->
   <div class="order-summary">
     <div class="summary-card">
-      <h3>Order Summary</h3>
+      <h3>Résumé de la commande</h3>
       
       <div class="summary-row">
-        <span>Subtotal</span>
+        <span>Sous-total</span>
         <span>{{subtotal | currency:'TND':'symbol':'1.3-3'}}</span>
       </div>
       
       <div class="summary-row">
-        <span>Delivery</span>
+        <span>Livraison</span>
         <span>{{deliveryFee | currency:'TND':'symbol':'1.3-3'}}</span>
       </div>
       
@@ -102,7 +102,7 @@
         <span>{{total | currency:'TND':'symbol':'1.3-3'}}</span>
       </div>
       
-      <p-button label="Proceed to Checkout" 
+      <p-button label="Passer à la caisse" 
                 icon="pi pi-lock" 
                 styleClass="checkout-button"
                 (click)="confirmCheckout()"
