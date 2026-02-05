@@ -158,8 +158,8 @@ export class CartComponent implements OnInit {
             });
 
             // Clear cart
-            // this.cartService.clearCart();
-            // this.loadCart();
+            this.cartService.clearCart();
+            this.loadCart();
 
 
           },

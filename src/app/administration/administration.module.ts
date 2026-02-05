@@ -28,6 +28,8 @@ import { RatingModule } from 'primeng/rating';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { GestionDiscountComponent } from './gestion-discount/gestion-discount.component';
 import { ChartModule } from 'primeng/chart';
+import { GestionCommandsComponent } from './gestion-commands/gestion-commands.component';
+import { TruncatePipe } from '../shared/pipes/truncate.pipe';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,6 +41,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     GestionCategoryComponent,
     GestionProduitComponent,
     GestionDiscountComponent,
+    GestionCommandsComponent,
+    TruncatePipe
   ],
   imports: [
     CommonModule,

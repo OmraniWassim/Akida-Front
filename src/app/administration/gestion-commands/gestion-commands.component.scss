@@ -1,0 +1,77 @@
+/* Add to your component's CSS file */
+.order-details {
+    padding: 1rem;
+}
+
+.order-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.order-header h3 {
+    margin-bottom: 0.5rem;
+}
+
+.order-date {
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.customer-info {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+}
+
+.order-items {
+    margin: 1.5rem 0;
+}
+
+.order-summary {
+    margin-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.summary-row.total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .order-details, .order-details * {
+        visibility: visible;
+    }
+    .order-details {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    .p-dialog-footer {
+        display: none !important;
+    }
+}

@@ -4,6 +4,7 @@ import { LayoutService } from "./service/app.layout.service";
 import { StompService } from '../administration/services/stomp.service';
 import { Order } from '../administration/models/Order';
 import { OrderService } from '../administration/services/order.service';
+import { OrderStatus } from '../administration/enum/OrderStatus.enum';
 
 @Component({
     selector: 'app-topbar',
@@ -20,24 +21,8 @@ export class AppTopBarComponent {
     commandeDialog: boolean = false;
     commandeToDisplay: Order = {} as Order;
     audio: HTMLAudioElement;
-    deliveryFee: number = 7; 
+    deliveryFee: number = 7;
 
-    sampleNotifications = [
-        {
-            id: 1,
-            title: 'Nouvelle commande reçue',
-            message: 'Le client #1234 a passé une nouvelle commande',
-            time: new Date(),
-            read: false
-        },
-        {
-            id: 2,
-            title: 'Commande expédiée',
-            message: 'La commande #5678 a été expédiée',
-            time: new Date(Date.now() - 3600000),
-            read: false
-        }
-    ];
 
 
     @ViewChild('menubutton') menuButton!: ElementRef;
@@ -65,6 +50,9 @@ export class AppTopBarComponent {
                 this.orderService.getOrderById(this.newCommandId).subscribe((commande: Order) => {
                     this.commandeToDisplay = commande;
                     this.commandeDialog = true;
+                    this.playNotificationSound();
+                    this.addNewOrderNotification(commande);
+
 
                 });
 
@@ -73,9 +61,40 @@ export class AppTopBarComponent {
         });
     }
 
+    addNewOrderNotification(order: Order): void {
+        const newNotification: Notification = {
+            id: order.id,
+            title: 'Nouvelle commande reçue',
+            message: `Commande #${order.id} - ${order.appUser?.firstName} ${order.appUser?.lastName}`,
+            time: new Date(),
+            read: false,
+            order: order
+        };
+
+        this.notifications.unshift(newNotification);
+        this.updateUnreadCount();
+    }
+
+    // Modify the markAsRead to handle order notifications
+    markAsRead(notification: Notification): void {
+        notification.read = true;
+        this.updateUnreadCount();
+
+        // Optional: Open order details when clicked
+        if (notification.order) {
+            this.commandeToDisplay = notification.order;
+            this.commandeDialog = true;
+        }
+    }
+
+    playNotificationSound(): void {
+        this.audio = new Audio();
+        this.audio.src = 'assets/notification-sound.mp3';
+        this.audio.load();
+        this.audio.play();
+    }
+
     loadNotifications() {
-        // TODO: Replace with actual API call to get notifications
-        this.notifications = [...this.sampleNotifications];
         this.updateUnreadCount();
     }
 
@@ -87,12 +106,7 @@ export class AppTopBarComponent {
         }
     }
 
-    markAsRead(notification: any) {
-        notification.read = true;
-        //remove item from notifications array
-        this.notifications = this.notifications.filter(n => n.id !== notification.id);
-        this.updateUnreadCount();
-    }
+
 
     markAllAsRead() {
         this.notifications.forEach(n => n.read = true);
@@ -103,7 +117,6 @@ export class AppTopBarComponent {
         this.unreadNotifications = this.notifications.filter(n => !n.read).length;
     }
 
-    // Call this method when you receive a new notification (from WebSocket or API)
     addNewNotification(notification: any) {
         this.notifications.unshift(notification);
         this.updateUnreadCount();
@@ -115,53 +128,69 @@ export class AppTopBarComponent {
     }
 
     acceptOrder() {
-        // this.orderService.updateOrderStatus(this.commandeToDisplay.id, 'ACCEPTED')
-        //     .subscribe({
-        //         next: () => {
-        //             this.messageService.add({
-        //                 severity: 'success',
-        //                 summary: 'Order Accepted',
-        //                 detail: `Order #${this.commandeToDisplay.id} has been accepted`
-        //             });
-        //             this.commandeDialog = false;
-        //         },
-        //         error: (err) => {
-        //             this.messageService.add({
-        //                 severity: 'error',
-        //                 summary: 'Error',
-        //                 detail: 'Failed to accept order'
-        //             });
-        //         }
-        //     });
+        this.orderService.updateOrderStatus(this.commandeToDisplay.id, OrderStatus.PENDING).subscribe({
+            next: () => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Commande acceptée',
+                    detail: `Commande #${this.commandeToDisplay.id} a été acceptée`,
+                    life: 3000
+                });
+
+                this.commandeDialog = false;
+
+                this.removeOrderNotification(this.commandeToDisplay.id);
+            }, error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erreur',
+                    detail: `Impossible d'accepter la commande #${this.commandeToDisplay.id}`,
+                    life: 3000
+                });
+            }
+        });
+
+
     }
 
     rejectOrder() {
-        //     this.orderService.updateOrderStatus(this.commandeToDisplay.id, 'REJECTED')
-        //         .subscribe({
-        //             next: () => {
-        //                 this.messageService.add({
-        //                     severity: 'warn',
-        //                     summary: 'Order Rejected',
-        //                     detail: `Order #${this.commandeToDisplay.id} has been rejected`
-        //                 });
-        //                 this.commandeDialog = false;
-        //             },
-        //             error: (err) => {
-        //                 this.messageService.add({
-        //                     severity: 'error',
-        //                     summary: 'Error',
-        //                     detail: 'Failed to reject order'
-        //                 });
-        //             }
-        //         });
-        // }
+        this.orderService.updateOrderStatus(this.commandeToDisplay.id, OrderStatus.CANCELLED).subscribe({
+            next: () => {
+                this.messageService.add({
+                    severity: 'warn',
+                    summary: 'Commande rejetée',
+                    detail: `Commande #${this.commandeToDisplay.id} a été rejetée`,
+                    life: 3000
+                });
+
+                this.commandeDialog = false;
+
+                this.removeOrderNotification(this.commandeToDisplay.id);
+
+            }, error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erreur',
+                    detail: `Impossible de rejeter la commande #${this.commandeToDisplay.id}`,
+                    life: 3000
+                });
+            }
+        });
+    }
+
+    removeOrderNotification(orderId: number) {
+        this.notifications = this.notifications.filter(n => n.id !== orderId);
+
+        this.updateUnreadCount();
     }
 }
 
 
-interface Notif {
-    timestamp: string | number | Date;
+interface Notification {
     id: number;
+    title: string;
     message: string;
-    fromUser: string;
+    time: Date;
+    read: boolean;
+    order?: Order; // Add order reference
 }

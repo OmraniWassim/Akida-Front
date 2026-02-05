@@ -8,6 +8,6 @@ export interface Order {
     status?: OrderStatus; 
     totalAmount: number;
     deliveryAddress: string;
-    appUser: { id: number }; 
+    appUser: { id: number,firstName?: string, lastName?: string }; 
     items: OrderItem[];
 }
