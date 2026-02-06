@@ -9,7 +9,7 @@ import { OrderStatus } from '../enum/OrderStatus.enum';
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://backend:8081/secured/orders';
+  private apiUrl = 'http://192.168.56.20:8080/secured/orders';
 
   constructor(private http: HttpClient) { }
 

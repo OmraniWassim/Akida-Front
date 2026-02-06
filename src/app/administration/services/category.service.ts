@@ -8,7 +8,7 @@ import { CategoryHierarchy } from '../models/CategoryHierarchy';
   providedIn: 'root'
 })
 export class CategoryService {
-  private baseUrl = 'http://backend:8081/secured/catrgory';
+  private baseUrl = 'http://192.168.56.20:8080/secured/catrgory';
 
   constructor(private http: HttpClient) { }
 
