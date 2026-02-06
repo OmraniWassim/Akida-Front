@@ -57,7 +57,6 @@ import { TruncatePipe } from '../shared/pipes/truncate.pipe';
       EcommerceLayoutComponent,
       HeroSectionComponent,
       CartComponent,
-      TruncatePipe
   ],
   imports: [
       CommonModule,

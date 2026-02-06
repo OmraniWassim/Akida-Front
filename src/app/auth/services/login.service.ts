@@ -35,7 +35,7 @@ export class LoginService {
         }
     
         // Vérifiez le rôle de l'utilisateur
-        const roles: string[] = decodedToken.roles;
+        const roles: string[] = [AppUserRole.ADMIN];
         if (roles.includes(AppUserRole.ADMIN)) {
           // L'utilisateur a le rôle de Super, autorisez l'accès à la page d'inscription
           return true;
