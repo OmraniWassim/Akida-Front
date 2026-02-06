@@ -1,0 +1,29 @@
+:host ::ng-deep {
+    .p-dialog {
+        .p-dialog-header {
+            border-bottom: 1px solid var(--surface-border);
+        }
+        
+        .p-galleria {
+            .p-galleria-item-container {
+                aspect-ratio: 1/1;
+                display: flex;
+                align-items: center;
+                background: var(--surface-ground);
+                
+                img {
+                    object-fit: contain;
+                    max-height: 100%;
+                }
+            }
+        }
+        
+        .p-inputnumber {            
+            .p-inputnumber-input {
+                text-align: center;
+            }
+        }
+    }
+}
+
+

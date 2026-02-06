@@ -1,0 +1,89 @@
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+}
+
+.signup-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+.signup-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    .logo {
+        width: 80px;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        margin: 0;
+        color: #2d3748;
+        font-size: 1.5rem;
+    }
+
+    p {
+        color: #718096;
+        margin: 0.5rem 0 0;
+    }
+}
+
+:host ::ng-deep {
+    .p-steps {
+        margin-bottom: 2rem;
+    }
+
+    .p-steps .p-steps-item .p-menuitem-link {
+        background: transparent;
+    }
+
+    .p-steps .p-steps-item.p-highlight .p-steps-number {
+        background: #667eea;
+        color: white;
+    }
+}
+
+.signup-form {
+    .field {
+        margin-bottom: 1.5rem;
+
+        .p-float-label {
+            width: 100%;
+        }
+    }
+
+    .field-checkbox {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+}
+
+.signup-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+
+    p {
+        color: #718096;
+        margin: 0 0 0.5rem;
+    }
+
+    button {
+        color: #667eea;
+    }
+} 

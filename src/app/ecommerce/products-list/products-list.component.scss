@@ -1,0 +1,43 @@
+
+/* Product Card Container */
+.product-card {
+  position: relative;
+  transition: all 0.3s ease;
+
+  /* Product Actions Container */
+  .product-actions {
+    display: flex;
+    gap: 0.5rem;
+
+    /* View Button - Hidden by default */
+    .view-btn {
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s ease;
+    }
+
+    /* Add to Cart Button - Always visible */
+    .add-to-cart-btn {
+      opacity: 1;
+      transition: all 0.3s ease;
+    }
+  }
+
+  /* Hover Effects */
+  &:hover {
+    .product-actions {
+      .view-btn {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+/* Special case for list view - keep both buttons always visible */
+.p-dataview-list .product-card .product-actions .view-btn {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+

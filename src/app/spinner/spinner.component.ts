@@ -11,10 +11,5 @@ export class SpinnerComponent {
 
   constructor(public loader: LoaderService) { }
 
-  ngOnInit() {
-    console.log('SpinnerComponent initialized');
-    console.log('boolean value of loader:', this.loader.getLoading())
-    ;
-  }
 
 }

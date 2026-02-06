@@ -10,6 +10,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { BlockUIModule } from 'primeng/blockui';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'primeng/api';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -22,6 +25,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         SpinnerComponent
     ],
     imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
         AppRoutingModule,
         AppLayoutModule,
         CommonModule,
@@ -39,7 +44,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
-        TranslateService
+        TranslateService,MessageService
     ],
     bootstrap: [AppComponent]
 })

@@ -1,0 +1,86 @@
+<p-dialog header="Détails du produit" 
+          [(visible)]="display" 
+          [style]="{width: '65vw'}" 
+          [modal]="true"
+          (onHide)="reset()"
+          (visibleChange)="onVisibleChange($event)"
+          [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    
+    <div class="grid" *ngIf="product">
+        <!-- Left Column - Product Images -->
+        <div class="col-12 md:col-6">
+            <p-galleria 
+            [(value)]="product.images" 
+            [responsiveOptions]="responsiveGalleriaOptions" 
+            [thumbnailsPosition]="'left'" 
+            [containerStyle]="{ 'max-width': '640px'}" 
+            [circular]="true"
+            [numVisible]="5">
+                <ng-template pTemplate="item" let-item>
+                    <img [src]="imageMap[item.thumbnailPath]" 
+                    style="width: 100%; height: 400px; object-fit: contain;"/>
+                </ng-template>
+                <ng-template pTemplate="thumbnail" let-item>
+                    <div class="grid grid-nogutter justify-content-center">
+                        <img [src]="imageMap[item.thumbnailPath]" 
+                         style="width: 60px; height: 60px; object-fit: cover;" />
+                    </div>
+                </ng-template>
+        </p-galleria>
+        </div>
+
+        <!-- Right Column - Product Details -->
+        <div class="col-12 md:col-6 pl-4">
+            <!-- Product Name -->
+            <h2 class="text-3xl font-bold mb-4">{{product.name}}</h2>
+            <!-- Price and Reviews -->
+            <div class="flex align-items-center mb-4">
+                <span class="text-3xl font-bold mr-3">
+                    {{product.price | currency:'TND':'symbol':'1.3-3'}}
+                </span>
+                <p-rating [ngModel]="product.ratings?.ratingValue || 5" 
+                         [readonly]="true" 
+                         [cancel]="false"
+                         class="mr-2"></p-rating>
+                <span class="text-sm text-color-secondary">
+                    ({{product.ratings?.reviewCount || 0}} reviews)
+                </span>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-5">
+                <p class="text-lg line-height-3">{{product.description}}</p>
+            </div>
+            <!-- stock-->
+            <div class="mb-5">
+                <span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span>
+            </div>
+            <div class="flex align-items-center gap-5 mb-5  align-items-end flex-wrap">
+                    <!-- Quantity Selector -->
+                    <div class="flex flex-column" style="min-width: 120px;">
+                        <label class="font-medium mb-2">Quantity</label>
+                        <p-inputNumber [(ngModel)]="quantity" 
+                                   [showButtons]="true" 
+                                    buttonLayout="horizontal" 
+                                    inputId="horizontal" 
+                                    spinnerMode="horizontal" 
+                                    [step]="1"
+                                    incrementButtonIcon="pi pi-plus" 
+                                    decrementButtonIcon="pi pi-minus" 
+                                    [min]="1" 
+                                    [max]="product.inventoryStatus === 'OUTOFSTOCK' ? 1 : product.stockQuantity"
+                                    inputId="quantity"
+                                    styleClass="compact-input"></p-inputNumber>
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    <div class="flex-1 flex align-items-end">
+                        <p-button label="Add to Cart" 
+                                icon="pi pi-shopping-cart"
+                                [disabled]="product.inventoryStatus === 'OUTOFSTOCK'"
+                                (click)="addToCart(product)"></p-button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>

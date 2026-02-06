@@ -14,6 +14,10 @@
     "manage_categories": "Gérer les catégories",
     "search": "Rechercher...",
     "Max_size_reached": "Taille  maximale atteinte",
-    "edit_image": "Modifier l'image"
+    "edit_image": "Modifier l'image",
+    "sous_category": "Sous-catégorie",
+    "yes": "Oui",
+    "no": "Non",
+    "parent_category": "Catégorie parente"
   }
   
