@@ -9,7 +9,7 @@ import { OrderStatus } from '../enum/OrderStatus.enum';
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:8081/secured/orders';
+  private apiUrl = 'http://backend:8081/secured/orders';
 
   constructor(private http: HttpClient) { }
 

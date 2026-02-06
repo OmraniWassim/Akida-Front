@@ -10,7 +10,7 @@ export class ProductService {
   getProductsByIdCategory(categoryId: number) {
     throw new Error('Method not implemented.');
   }
-  private baseUrl = 'http://localhost:8081/secured/product';
+  private baseUrl = 'http://backend:8081/secured/product';
 
   constructor(private http: HttpClient) { }
 

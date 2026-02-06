@@ -10,7 +10,7 @@ import { AppUser } from '../models/AppUser';
 
 export class AppUserService {
 
-  private apiServerUrl = "http://localhost:8081/api/v1";
+  private apiServerUrl = "http://backend:8081/api/v1";
 
   constructor(private http: HttpClient){}
 
