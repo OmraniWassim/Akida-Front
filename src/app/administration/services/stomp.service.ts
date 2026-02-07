@@ -10,7 +10,7 @@ export class StompService {
   private connectedOnce = false;
   private topicQueue: { topic: string; callback: any }[] = [];
 
-  private socket = new SockJS('http://192.168.56.20:8080/sba-websocket');
+  private socket = new SockJS('http://192.168.56.20:8081/sba-websocket');
   private stompClient = Stomp.over(this.socket);
 
   constructor() {

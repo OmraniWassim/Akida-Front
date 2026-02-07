@@ -9,7 +9,7 @@ import { AppUserRole } from 'src/app/administration/enum/AppUserRole.enum';
   providedIn: 'root'
 })
 export class LoginService {
-  private apiServerUrl = "http://192.168.56.20:8080/api/v1";
+  private apiServerUrl = "http://192.168.56.20:8081/api/v1";
 
   constructor(
     private http: HttpClient,
