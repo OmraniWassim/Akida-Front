@@ -41,7 +41,6 @@ export class LoginComponent implements OnInit {
             return;
         }
         let payload=this.loginForm.getRawValue()
-        this.router.navigate(['/admin/dashboard']);
         this.loginservice.loginUser(payload).subscribe(
             (data) => {
                 console.log(data)
